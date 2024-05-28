@@ -7,7 +7,7 @@ app.secret_key = 'your_secret_key'
 
 # Load config from Config class
 class Config:
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://rasmuslogin:password@localhost/movie_site')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://rasmuslogin:password@localhost/DIS_project')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 app.config.from_object(Config)
@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     __tablename__ = 'users'  # Specify the table name explicitly
-    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
