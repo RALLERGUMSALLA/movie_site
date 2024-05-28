@@ -1,0 +1,19 @@
+-- Inserting preferences for user with userid 9
+INSERT INTO prefer (UserID, FilmID, rating)
+VALUES
+    (9, 1, 5),  -- User 9 likes film with FilmID 1 and gives it a rating of 5
+    (9, 2, 4),  -- User 9 likes film with FilmID 2 and gives it a rating of 4
+    (9, 3, 3);  -- User 9 likes film with FilmID 3 and gives it a rating of 3
+
+SELECT f.title AS movie_title, p.rating
+FROM prefer p
+JOIN film f ON p.FilmID = f.filmid
+WHERE p.UserID = 9;
+
+Output
+"movie_title","rating"
+"Enter the Anime",5
+"Dark Forces",4
+"The App",3
+
+This output should be seen in the dashbord section of user 9: sara
