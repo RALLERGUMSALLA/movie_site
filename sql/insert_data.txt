@@ -1,0 +1,37 @@
+COPY Film(Title, Language, Genre, runtime, IMDB_score)
+FROM '/Users/sarabertoli/Desktop/DIS project/NetflixOriginals.csv'
+DELIMITER ';'
+CSV HEADER;
+
+-- Insert data from the producer.csv file into the Producer table
+COPY Producer (First_name, Sur_name, Nationality) 
+FROM '/Users/sarabertoli/Desktop/DIS project/Producer.csv' 
+DELIMITER ';' CSV HEADER;
+
+
+
+-- Insert data from the users.csv file into the Users table
+COPY Users (username, email, password)
+FROM '/Users/sarabertoli/Desktop/DIS project/Users.csv'
+DELIMITER ';' CSV HEADER;
+
+
+
+-- Insert data from the prefer.csv file into the Prefer table
+COPY Prefer (UserID, FilmID, rating) 
+FROM '/Users/sarabertoli/Desktop/DIS project/Prefer.csv' 
+DELIMITER ';' CSV HEADER;
+
+
+
+-- Insert data from the favor.csv file into the Favor table
+COPY Favor (UserID, ProducerID, rating) 
+FROM '/Users/sarabertoli/Desktop/DIS project/Favor.csv' 
+DELIMITER ';' CSV HEADER;
+
+
+
+-- Insert data from the produces.csv file into the produces table
+COPY produces (ProducerID, FilmID) 
+FROM '/Users/sarabertoli/Desktop/DIS project/produces.csv' 
+DELIMITER ';' CSV HEADER;
