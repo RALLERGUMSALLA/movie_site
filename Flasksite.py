@@ -21,8 +21,34 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
+     # Define relationship with Prefer model
+    preferences = db.relationship("Prefer", back_populates="user")
+
     def __repr__(self):
         return f'<User {self.username}>'
+
+class Prefer(db.Model):
+    __tablename__ = 'prefer'
+    P_ID = db.Column(db.Integer, primary_key=True)
+    UserID = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
+    FilmID = db.Column(db.Integer, db.ForeignKey('film.filmid'), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+
+    # Define relationship with User and Film models
+    user = db.relationship("User", back_populates="preferences")
+    film = db.relationship("Film", back_populates="preferred_by")
+
+class Film(db.Model):
+    __tablename__ = 'film'
+    filmid = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    language = db.Column(db.String(255), nullable=False)
+    genre = db.Column(db.String(255), nullable=False)
+    runtime = db.Column(db.Integer, nullable=False)
+    imdb_score = db.Column(db.Float, nullable=False)
+
+    # Define relationship with Prefer model
+    preferred_by = db.relationship("Prefer", back_populates="film")
 
 # Create the database and tables
 with app.app_context():
@@ -77,6 +103,14 @@ def create_account():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+
+        # Check if the username or email already exists
+        existing_user = User.query.filter_by(username=username).first()
+        existing_email = User.query.filter_by(email=email).first()
+        if existing_user:
+            return render_template('create_account.html', message='Username already exists')
+        elif existing_email:
+            return render_template('create_account.html', message='Email already exists')
         
         # Create a new user and add it to the database
         new_user = User(username=username, email=email, password=password)
@@ -85,6 +119,13 @@ def create_account():
 
         return redirect(url_for('login'))
     return render_template('create_account.html')
+
+@app.route('/user_profile')
+def user_profile(user_id):
+    user = User.query.get_or_404(user_id)
+    favorite_movies = [preference.film for preference in user.preferences]
+    return render_template('user_profile.html', user=user, favorite_movies=favorite_movies)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
