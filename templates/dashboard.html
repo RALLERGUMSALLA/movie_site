@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    body {
+      padding-top: 60px;
+      font-family: Arial, sans-serif;
+    }
+    .content {
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  {% include 'navbar.html' %}
+  <div class="content">
+    <h1>Welcome to Your Dashboard, {{ username }}!</h1>
+
+    <h2>Private Features:</h2>
+    <ul>
+      {% for item in private_data %}
+      <li>{{ item.title }}: {{ item.content }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+</html>

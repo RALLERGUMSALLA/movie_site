@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    body {
+      padding-top: 60px; /* Ensure content is not hidden behind the fixed navbar */
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  {% include 'navbar.html' %}
+  <div class="login-container">
+    <h2>Login</h2>
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+    <form method="post">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+      <a href="/create_account">Create account</a>
+    </form>
+  </div>
+</body>
+</html>
