@@ -9,11 +9,19 @@ How to setup database:
 
 First get postgresSQL and pgadmin 4
 
-Then create new database in pgadmin called DIS_project
+Start the postgreSQL server
 
+Then create new database in pgadmin called "DIS_project"
 
+Right click  Login/Group Roles, and create Login/Group Roles with username "rasmuslogin" and the password "password" 
+
+Right click the DIS_project database and go to properties and give rasmuslogin full privileges
+
+To check if it worked give this query to the database
 
 SELECT rolname, rolsuper, rolcreaterole, rolcreatedb, rolcanlogin FROM pg_roles WHERE rolname = 'rasmuslogin';
+
+if all are false, make this query:
 
 ALTER ROLE rasmuslogin LOGIN;
 ALTER ROLE rasmuslogin CREATEDB;
