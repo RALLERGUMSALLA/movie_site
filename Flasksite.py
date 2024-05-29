@@ -14,7 +14,7 @@ app.config.from_object(Config)
 
 db = SQLAlchemy(app)
 
-class User(db.Model):
+class Users(db.Model):
     __tablename__ = 'users'  # Specify the table name explicitly
     userid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -22,20 +22,20 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
 
      # Define relationship with Prefer model
-    preferences = db.relationship("Prefer", back_populates="user")
+    preferences = db.relationship("Prefer", back_populates="users")
 
     def __repr__(self):
-        return f'<User {self.username}>'
+        return f'<Users {self.username}>'
 
 class Prefer(db.Model):
     __tablename__ = 'prefer'
-    P_ID = db.Column(db.Integer, primary_key=True)
-    UserID = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
-    FilmID = db.Column(db.Integer, db.ForeignKey('film.filmid'), nullable=False)
+    p_id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
+    filmid = db.Column(db.Integer, db.ForeignKey('film.filmid'), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
 
     # Define relationship with User and Film models
-    user = db.relationship("User", back_populates="preferences")
+    users = db.relationship("User", back_populates="preferences")
     film = db.relationship("Film", back_populates="preferred_by")
 
 class Film(db.Model):
@@ -70,12 +70,15 @@ private_data = [
 def index():
     return render_template('index.html', public_data=public_data, private_data=private_data, username=session.get('username'))
 
+    
 @app.route('/dashboard')
 def dashboard():
-    if 'username' in session:
-        return render_template('dashboard.html', private_data=private_data, username=session['username'])
-    else:
-        return redirect(url_for('login'))
+    if 'userid' in session:
+        user = Users.query.filter_by(userid=session['userid']).first()
+        if user:
+            favorite_movies = [preference.film for preference in user.preferences]
+            return render_template('dashboard.html', private_data=private_data, username=user.username, favorite_movies=favorite_movies)
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -84,7 +87,7 @@ def login():
         password = request.form['password']
         
         # Query the database for the user
-        user = User.query.filter_by(username=username, password=password).first()
+        user = Users.query.filter_by(username=username, password=password).first()
         if user:
             session['username'] = username
             return redirect(url_for('dashboard'))
@@ -105,15 +108,15 @@ def create_account():
         password = request.form['password']
 
         # Check if the username or email already exists
-        existing_user = User.query.filter_by(username=username).first()
-        existing_email = User.query.filter_by(email=email).first()
+        existing_user = Users.query.filter_by(username=username).first()
+        existing_email = Users.query.filter_by(email=email).first()
         if existing_user:
             return render_template('create_account.html', message='Username already exists')
         elif existing_email:
             return render_template('create_account.html', message='Email already exists')
         
         # Create a new user and add it to the database
-        new_user = User(username=username, email=email, password=password)
+        new_user = Users(username=username, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
 
@@ -122,7 +125,7 @@ def create_account():
 
 @app.route('/user_profile')
 def user_profile(user_id):
-    user = User.query.get_or_404(user_id)
+    user = Users.query.get_or_404(user_id)
     favorite_movies = [preference.film for preference in user.preferences]
     return render_template('user_profile.html', user=user, favorite_movies=favorite_movies)
 
