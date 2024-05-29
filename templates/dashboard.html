@@ -30,6 +30,16 @@
       {% endfor %}
     </ul>
 
+    <h2>Your Favorite Movies:</h2>
+    <ul>
+      {% for movie in favorite_movies %}
+      <li>{{ movie.title }} (Rating: {{ movie.imdb_score }})</li>
+      {% else %}
+      <li>You have no favorite movies listed.</li>
+      {% endfor %}
+    </ul>
+
   </div>
 </body>
 </html>
+
