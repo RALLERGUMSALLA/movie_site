@@ -25,6 +25,13 @@
       <li>{{ item.title }}: {{ item.content }}</li>
       {% endfor %}
     </ul>
+
+    <h2>Liked Movies:</h2>
+    <ul>
+      {% for movie in liked_movies %}
+      <li>{{ movie.title }} ({{ movie.genre }})</li>
+      {% endfor %}
+    </ul>
   </div>
 </body>
 </html>
