@@ -7,7 +7,7 @@ app.secret_key = 'your_secret_key'
 
 # Load config from Config class
 class Config:
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://rasmuslogin:password@localhost/movie_site')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://rasmuslogin:password@localhost/DIS_project')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 app.config.from_object(Config)
@@ -15,26 +15,24 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 
 class User(db.Model):
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'users'  # Table name with the users
+    userid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    preferences = db.relationship('Prefer', back_populates='user')
+    preferences = db.relationship("Prefer", back_populates="user")
 
     def __repr__(self):
         return f'<User {self.username}>'
 
 class Prefer(db.Model):
     __tablename__ = 'prefer'
-    P_ID = db.Column(db.Integer, primary_key=True)
-    UserID = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    FilmID = db.Column(db.Integer, db.ForeignKey('film.filmid'), nullable=False)
+    p_id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
+    filmid = db.Column(db.Integer, db.ForeignKey('film.filmid'), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
-
-    # Define relationship with User and Film models
-    user = db.relationship('User', back_populates='preferences')
-    film = db.relationship('Film', back_populates='preferred_by')
+    user = db.relationship("User", back_populates="preferences")
+    film = db.relationship("Film", back_populates="preferred_by")
 
 class Film(db.Model):
     __tablename__ = 'film'
@@ -44,9 +42,7 @@ class Film(db.Model):
     genre = db.Column(db.String(255), nullable=False)
     runtime = db.Column(db.Integer, nullable=False)
     imdb_score = db.Column(db.Float, nullable=False)
-
-    # Define relationship with Prefer model
-    preferred_by = db.relationship('Prefer', back_populates='film')
+    preferred_by = db.relationship("Prefer", back_populates="film")
 
 # Create the database and tables
 with app.app_context():
@@ -71,11 +67,12 @@ def index():
 @app.route('/dashboard')
 def dashboard():
     if 'username' in session:
+        # Query the database for the user
         user = User.query.filter_by(username=session['username']).first()
         if user:
-            preferences = user.preferences
-            favorite_movies = [pref.film for pref in preferences]
-            return render_template('dashboard.html', private_data=private_data, username=session['username'], favorite_movies=favorite_movies)
+            # Retrieve the movies liked by the user
+            liked_movies = [prefer.film for prefer in user.preferences]
+            return render_template('dashboard.html', private_data=private_data, username=session['username'], liked_movies=liked_movies)
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -104,12 +101,14 @@ def create_account():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        
-        # Check if username or email already exists
-        existing_user = User.query.filter(db.or_(User.username == username, User.email == email)).first()
-        if existing_user:
-            return render_template('create_account.html', message='Username or email already exists')
 
+        existing_user = User.query.filter_by(username=username).first()
+        existing_email = User.query.filter_by(email=email).first()
+        if existing_user:
+            return render_template('create_account.html', message='Username already exists')
+        elif existing_email:
+            return render_template('create_account.html', message='Email already exists')
+        
         # Create a new user and add it to the database
         new_user = User(username=username, email=email, password=password)
         db.session.add(new_user)
