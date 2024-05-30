@@ -106,6 +106,18 @@ def search_users():
 
     return render_template('dashboard.html', private_data=private_data, username=session.get('username'), users=users, query=query)
 
+@app.route('/search_movies', methods=['GET', 'POST'])
+def search_movies():
+    query = request.args.get('query', '')
+    films = []
+
+    if query:
+        # Perform a case-insensitive search for films with titles matching the query
+        regex_pattern = f'%{query}%'
+        films = Film.query.filter(Film.title.ilike(regex_pattern)).all()
+
+    return render_template('dashboard.html', films=films, query=query)
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
@@ -132,6 +144,37 @@ def create_account():
 
         return redirect(url_for('login'))
     return render_template('create_account.html')
+
+@app.route('/add_movie', methods=['POST'])
+def add_movie():
+    if 'username' in session:
+        username = session['username']
+        user = User.query.filter_by(username=username).first()
+        if user:
+            # Retrieve form data
+            title = request.form['title']
+            genre = request.form['genre']
+            runtime = int(request.form['runtime'])
+            imdb_score = float(request.form['imdb_score'])
+
+            # Create a new movie
+            new_movie = Film(title=title, genre=genre, runtime=runtime, imdb_score=imdb_score)
+
+            # Add the new movie to the database
+            db.session.add(new_movie)
+            db.session.commit()
+
+            # Create a new preference entry for the user
+            preference = Prefer(user=user, film=new_movie, rating=0)
+
+            # Add the preference to the database
+            db.session.add(preference)
+            db.session.commit()
+
+            # Redirect back to the dashboard
+            return redirect(url_for('dashboard'))
+    # If user is not logged in or encountered an error, redirect to login page
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
