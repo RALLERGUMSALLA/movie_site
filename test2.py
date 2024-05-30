@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import or_
 import os
 
 app = Flask(__name__)
@@ -89,6 +90,21 @@ def login():
         else:
             return render_template('login.html', message='Invalid username or password')
     return render_template('login.html')
+
+@app.route('/search_users', methods=['GET', 'POST'])
+def search_users():
+    query = request.args.get('query', '')
+    users = []
+
+    if query:
+        # Perform a case-insensitive search using the regular expression
+        regex_pattern = f'%{query}%'
+        users = User.query.filter(or_(
+            User.username.ilike(regex_pattern),
+            User.email.ilike(regex_pattern)
+        )).all()
+
+    return render_template('dashboard.html', private_data=private_data, username=session.get('username'), users=users, query=query)
 
 @app.route('/logout')
 def logout():
