@@ -33,6 +33,21 @@
       {% endfor %}
     </ul>
 
+    <h2>Search Movies:</h2>
+    <form method="GET" action="{{ url_for('search_movies') }}">
+        <input type="text" name="query" placeholder="Enter movie title to search">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if films %}
+      <h3>Search Results:</h3>
+      <ul>
+        {% for film in films %}
+        <li>{{ film.title }} ({{ film.genre }})</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
     <h2>Search Users:</h2>
     <form method="GET" action="{{ url_for('search_users') }}">
         <input type="text" name="query" placeholder="Enter username to search">
