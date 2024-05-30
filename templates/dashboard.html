@@ -32,6 +32,25 @@
       <li>{{ movie.title }} ({{ movie.genre }})</li>
       {% endfor %}
     </ul>
+
+    <h2>Search Users:</h2>
+    <form method="GET" action="{{ url_for('search_users') }}">
+        <input type="text" name="query" placeholder="Enter username to search">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if users is not none %}
+      {% if users %}
+        <h3>Search Results:</h3>
+        <ul>
+          {% for user in users %}
+          <li>{{ user.username }} ({{ user.email }})</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No users found matching "{{ query }}".</p>
+      {% endif %}
+    {% endif %}
   </div>
 </body>
 </html>
