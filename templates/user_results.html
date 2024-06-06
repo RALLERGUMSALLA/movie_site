@@ -1,0 +1,10 @@
+{% if users %}
+  <h3>Search Results:</h3>
+  <ul>
+    {% for user in users %}
+    <li>{{ user.username }} ({{ user.email }})</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No users found matching "{{ query }}".</p>
+{% endif %}

@@ -1,0 +1,10 @@
+{% if films %}
+  <h3>Search Results:</h3>
+  <ul>
+    {% for film in films %}
+    <li>{{ film.title }} ({{ film.genre }})</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No movies found.</p>
+{% endif %}

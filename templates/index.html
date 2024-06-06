@@ -13,6 +13,28 @@
       padding: 20px;
     }
   </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Search Movies
+      $('#search-movies-form').submit(function(event) {
+        event.preventDefault();
+        const query = $('#search-movies-input').val();
+        $.get('{{ url_for('search_movies') }}', { query: query }, function(data) {
+          $('#movie-results').html(data);
+        });
+      });
+
+      // Search Users
+      $('#search-users-form').submit(function(event) {
+        event.preventDefault();
+        const query = $('#search-users-input').val();
+        $.get('{{ url_for('search_users') }}', { query: query }, function(data) {
+          $('#user-results').html(data);
+        });
+      });
+    });
+  </script>
 </head>
 <body>
   {% include 'navbar.html' %}
@@ -35,6 +57,28 @@
     </ul>
     <p>Logged in as: {{ session.username }}</p>
     {% endif %}
+
+    <h2>Search Movies:</h2>
+    <form id="search-movies-form">
+        <input type="text" id="search-movies-input" name="query" placeholder="Enter movie title to search">
+        <button type="submit">Search</button>
+    </form>
+    <div id="movie-results">
+      {% if films %}
+        {% include 'movie_results.html' %}
+      {% endif %}
+    </div>
+
+    <h2>Search Users:</h2>
+    <form id="search-users-form">
+        <input type="text" id="search-users-input" name="query" placeholder="Enter username to search">
+        <button type="submit">Search</button>
+    </form>
+    <div id="user-results">
+      {% if users is not none %}
+        {% include 'user_results.html' %}
+      {% endif %}
+    </div>
   </div>
 </body>
 </html>
