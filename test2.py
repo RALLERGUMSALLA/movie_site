@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import os
@@ -22,7 +22,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     preferences = db.relationship("Prefer", back_populates="user")
-
+    favors = db.relationship('Favor', back_populates='user')
     def __repr__(self):
         return f'<User {self.username}>'
 
@@ -44,6 +44,33 @@ class Film(db.Model):
     runtime = db.Column(db.Integer, nullable=False)
     imdb_score = db.Column(db.Float, nullable=False)
     preferred_by = db.relationship("Prefer", back_populates="film")
+    produced_by = db.relationship('Produces', back_populates='film')
+
+class Producer(db.Model):
+    __tablename__ = 'producer'
+    producerid = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(255), nullable=False)
+    sur_name = db.Column(db.String(255), nullable=False)
+    nationality = db.Column(db.String(255), nullable=False)
+    produced_films = db.relationship('Produces', back_populates='producer')
+    favored_by = db.relationship('Favor', back_populates='producer')
+
+class Produces(db.Model):
+    __tablename__ = 'produces'
+    p_id = db.Column(db.Integer, primary_key=True)
+    producerid = db.Column(db.Integer, db.ForeignKey('producer.producerid'), nullable=False)
+    filmid = db.Column(db.Integer, db.ForeignKey('film.filmid'), nullable=False)
+    producer = db.relationship('Producer', back_populates='produced_films')
+    film = db.relationship('Film', back_populates='produced_by')
+
+class Favor(db.Model):
+    __tablename__ = 'favor'
+    f_id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
+    producerid = db.Column(db.Integer, db.ForeignKey('producer.producerid'), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    user = db.relationship('User', back_populates='favors')
+    producer = db.relationship('Producer', back_populates='favored_by')
 
 # Create the database and tables
 with app.app_context():
@@ -68,13 +95,12 @@ def index():
 @app.route('/dashboard')
 def dashboard():
     if 'username' in session:
-        # Query the database for the user
         user = User.query.filter_by(username=session['username']).first()
-        if user:
-            # Retrieve the movies liked by the user
-            liked_movies = [prefer.film for prefer in user.preferences]
-            return render_template('dashboard.html', private_data=private_data, username=session['username'], liked_movies=liked_movies)
+        liked_movies = [prefer.film for prefer in user.preferences]
+        user_favors = user.favors
+        return render_template('dashboard.html', private_data=private_data, username=session['username'], liked_movies=liked_movies, user_favors=user_favors)
     return redirect(url_for('login'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -117,6 +143,21 @@ def search_movies():
 
     return render_template('movie_results.html', films=films, query=query)
 
+@app.route('/search_producers', methods=['GET'])
+def search_producers():
+    query = request.args.get('query', '')
+    producers = []
+
+    if query:
+        regex_pattern = f'%{query}%'
+        producers = Producer.query.filter(or_(
+            Producer.first_name.ilike(regex_pattern),
+            Producer.sur_name.ilike(regex_pattern),
+            Producer.nationality.ilike(regex_pattern)
+        )).all()
+
+    return render_template('producer_results.html', producers=producers, query=query)
+
 
 @app.route('/logout')
 def logout():
@@ -144,6 +185,37 @@ def create_account():
 
         return redirect(url_for('login'))
     return render_template('create_account.html')
+
+@app.route('/favorite_producer', methods=['POST'])
+def favorite_producer():
+    if 'username' in session:
+        user = User.query.filter_by(username=session['username']).first()
+        producer_id = request.form.get('producer_id')
+        rating = int(request.form.get('rating')) if request.form.get('rating') else None
+        
+        if user:
+            # Check if the favorite already exists
+            existing_favorite = Favor.query.filter_by(userid=user.userid, producerid=producer_id).first()
+            if not existing_favorite:
+                if producer_id and rating:
+                    producer_name = request.form.get('producer_name')
+                    # Add the producer to the user's favorites with the specified rating
+                    favorite = Favor(userid=user.userid, producerid=producer_id, rating=rating)
+                    db.session.add(favorite)
+                    db.session.commit()
+                    # Return a JSON response with a success message
+                    return jsonify({'message': f'{producer_name} favorited and rated successfully!'}), 200
+                else:
+                    # Return a JSON response with a message for missing producer ID or rating
+                    return jsonify({'message': 'Please provide both producer ID and rating.'}), 400
+            else:
+                # Return a JSON response with a message for already favorited producer
+                return jsonify({'message': 'Producer already favorited!'}), 200
+        else:
+            # Return a JSON response with a message for not logged-in user
+            return jsonify({'message': 'You need to be logged in to favorite producers.'}), 401
+    # Return a JSON response for invalid requests
+    return jsonify({'message': 'Invalid request.'}), 400
 
 @app.route('/add_movie', methods=['POST'])
 def add_movie():

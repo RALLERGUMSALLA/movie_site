@@ -1,0 +1,19 @@
+{% if producers %}
+  <h3>Search Results:</h3>
+  <ul>
+    {% for producer in producers %}
+    <li>{{ producer.first_name }} {{ producer.sur_name }} ({{ producer.nationality }})
+      {% if session.username %}
+      <form class="favorite-producer-form" action="{{ url_for('favorite_producer') }}" method="POST">
+        <input type="hidden" name="producer_id" value="{{ producer.producerid }}">
+        <input type="hidden" name="producer_name" value="{{ producer.first_name }} {{ producer.sur_name }}">
+        <input type="number" name="rating" min="1" max="5" required>
+        <button type="submit">Favorite & Rate</button>
+      </form>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No producers found matching "{{ query }}".</p>
+{% endif %}

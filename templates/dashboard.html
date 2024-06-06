@@ -32,6 +32,13 @@
       <li>{{ movie.title }} ({{ movie.genre }})</li>
       {% endfor %}
     </ul>
+    
+    <h2>Your Favorite Producers:</h2>
+    <ul>
+        {% for favor in user_favors %}
+        <li>{{ favor.producer.first_name }} {{ favor.producer.sur_name }} - Rating: {{ favor.rating }}</li>
+        {% endfor %}
+    </ul>
   </div>
 </body>
 </html>
