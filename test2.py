@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import os
@@ -203,19 +203,24 @@ def favorite_producer():
                     favorite = Favor(userid=user.userid, producerid=producer_id, rating=rating)
                     db.session.add(favorite)
                     db.session.commit()
-                    # Return a JSON response with a success message
-                    return jsonify({'message': f'{producer_name} favorited and rated successfully!'}), 200
+                    # Redirect to the dashboard with a success message
+                    flash(f'{producer_name} favorited and rated successfully!')
+                    return redirect(url_for('dashboard'))
                 else:
-                    # Return a JSON response with a message for missing producer ID or rating
-                    return jsonify({'message': 'Please provide both producer ID and rating.'}), 400
+                    # Redirect to the dashboard with an error message
+                    flash('Please provide both producer ID and rating.')
+                    return redirect(url_for('dashboard'))
             else:
-                # Return a JSON response with a message for already favorited producer
-                return jsonify({'message': 'Producer already favorited!'}), 200
+                # Redirect to the dashboard with an error message
+                flash('Producer already favorited!')
+                return redirect(url_for('dashboard'))
         else:
-            # Return a JSON response with a message for not logged-in user
-            return jsonify({'message': 'You need to be logged in to favorite producers.'}), 401
-    # Return a JSON response for invalid requests
-    return jsonify({'message': 'Invalid request.'}), 400
+            # Redirect to the login page with an error message
+            flash('You need to be logged in to favorite producers.')
+            return redirect(url_for('login'))
+    # Redirect to the login page with an error message
+    flash('Invalid request.')
+    return redirect(url_for('login'))
 
 @app.route('/add_movie', methods=['POST'])
 def add_movie():
