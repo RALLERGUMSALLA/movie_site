@@ -1,3 +1,8 @@
+------ PROJECT OVERVIEW ------------
+
+This project consists of a Flask-based website that interacts with a PostgreSQL database using SQLAlchemy. The website allows users to search for movies, users, and producers, and to create a personalized dashboard with favorite movies and producers.
+
+
 Test2.py
 -- Contains the flask funtionality for the site
 
