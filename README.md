@@ -17,8 +17,11 @@ Then create new database in pgadmin called DIS_project
 Then make sure to create a Login/Group Roles, give it the username: rasmuslogin, and the password: password
 
 Make sure this login has the access to the database by giving this query: 
+
 >>ALTER ROLE rasmuslogin LOGIN;
+
 >>ALTER ROLE rasmuslogin CREATEDB;
+
 >>ALTER ROLE rasmuslogin SUPERUSER;
 
 In the database create the new schema with present under SQL create_table.txt. 
