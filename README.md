@@ -66,7 +66,7 @@ Congratulations! You are now ready to browse the website.
 
 ### Home Page
 
-* Search for movies, users, and producers. This is done using SQLAlchemy's ilike. and the SQL equievelant of this is:
+* Search for movies, users, and producers. This is done using SQLAlchemy's ilike. and the PostgreSQL equievelant of this is:
 ```sql:
 SELECT * FROM users
 WHERE username ILIKE '%query%' OR email ILIKE '%query%';
