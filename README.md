@@ -83,35 +83,17 @@ WHERE username ILIKE '%query%' OR email ILIKE '%query%';
 * Create a dummy user called `sara` with password `123` and any email address
 * Run the SQL script in `example.txt` to add favorite movies
 * Browse the favorite movies and producers to see the expected results
+* With a created user and logged in, you can then add and rate your favourite producers
 
 You can also add favorite producers to the dummy user.
 
 ## Future Improvements
 
-* 
-
-
-
-
-
-
-
-
-
-SELECT rolname, rolsuper, rolcreaterole, rolcreatedb, rolcanlogin FROM pg_roles WHERE rolname = 'rasmuslogin';
-
-ALTER ROLE rasmuslogin LOGIN;
-ALTER ROLE rasmuslogin CREATEDB;
-ALTER ROLE rasmuslogin SUPERUSER;
-
-
-
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(80) UNIQUE NOT NULL,
-    email VARCHAR(120) UNIQUE NOT NULL,
-    password VARCHAR(200) NOT NULL
-);
+* Get the same functioanlity with movies as there is for the producer favor system
+* Be able to watch other users preferences
+* Make the site look better
+* Be able to remove a producer fro myour favorites (and movies, when implemented)
+* Notification, if new producer/movie is added to the database that you favor.
 
 
 
