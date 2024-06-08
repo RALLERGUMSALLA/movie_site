@@ -30,6 +30,7 @@ requirements.txt
 ALTER ROLE rasmuslogin LOGIN;
 ALTER ROLE rasmuslogin CREATEDB;
 ALTER ROLE rasmuslogin SUPERUSER;
+```
 
 ### Create Schema and Insert Data
 
