@@ -5,15 +5,23 @@ This project consists of a Flask-based website that interacts with a PostgreSQL 
 
 ## DIRECTORY STRUCTURE 
 
-website.py
--- Contains the flask funtionality for the site
+data
+-- Contains the data for the database
+
+sql
+-- Contains the sql queries to create the database
 
 templates
 -- Contains the HTML for the different links on the site
 
+README.md
+-- Contains what you are reading now
+
 requirements.txt
 -- Contains the requirements to run the code
 
+website.py
+-- Contains the flask funtionality for the site
 
 ## Setting up the DB
 
@@ -25,7 +33,7 @@ requirements.txt
 ### Create Login/Group Roles
 
 * Create a new login role with username `rasmuslogin` and password `password`
-* Grant the following privileges to the role:
+* Grant the following privileges to the role via a query to the database:
 ```sql:
 ALTER ROLE rasmuslogin LOGIN;
 ALTER ROLE rasmuslogin CREATEDB;
@@ -66,7 +74,7 @@ Congratulations! You are now ready to browse the website.
 
 ### Home Page
 
-* Search for movies, users, and producers. This is done using SQLAlchemy's ilike. and the PostgreSQL equievelant of this is:
+* Search for movies, users, and producers. This is done using SQLAlchemy's ilike. and the PostgreSQL equievelant of this is (for users search):
 ```sql:
 SELECT * FROM users
 WHERE username ILIKE '%query%' OR email ILIKE '%query%';
@@ -89,7 +97,7 @@ You can also add favorite producers to the dummy user.
 
 ## Future Improvements
 
-* Get the same funtionality with movies as there is for the producer favor system
+* Get the same functionality with movies as there is for the producer favor system
 * Be able to watch other users preferences
 * Make the site look better
 * Be able to remove a producer from your favorites (and movies, when implemented)
