@@ -5,7 +5,7 @@ This project consists of a Flask-based website that interacts with a PostgreSQL 
 
 ## DIRECTORY STRUCTURE 
 
-Test2.py
+website.py
 -- Contains the flask funtionality for the site
 
 templates
@@ -52,7 +52,7 @@ ALTER ROLE rasmuslogin SUPERUSER;
 
 ### Run the Site
 
-* Run `python3 test2.py` from the command line
+* Run `python3 website.py` from the command line
 * Copy the http link that appears and paste it into a browser
 
 Congratulations! You are now ready to browse the website.
@@ -89,10 +89,10 @@ You can also add favorite producers to the dummy user.
 
 ## Future Improvements
 
-* Get the same functioanlity with movies as there is for the producer favor system
+* Get the same funtionality with movies as there is for the producer favor system
 * Be able to watch other users preferences
 * Make the site look better
-* Be able to remove a producer fro myour favorites (and movies, when implemented)
+* Be able to remove a producer from your favorites (and movies, when implemented)
 * Notification, if new producer/movie is added to the database that you favor.
 
 
