@@ -1,5 +1,4 @@
 # PROJECT OVERVIEW 
-================
 
 This project consists of a Flask-based website that interacts with a PostgreSQL database using SQLAlchemy. The website allows users to search for movies, users, and producers, and to create a personalized dashboard with favorite movies and producers.
 
@@ -27,7 +26,10 @@ requirements.txt
 
 * Create a new login role with username `rasmuslogin` and password `password`
 * Grant the following privileges to the role:
-
+```sql:
+ALTER ROLE rasmuslogin LOGIN;
+ALTER ROLE rasmuslogin CREATEDB;
+ALTER ROLE rasmuslogin SUPERUSER;
 
 ### Create Schema and Insert Data
 
