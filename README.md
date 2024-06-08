@@ -53,7 +53,7 @@ ALTER ROLE rasmuslogin SUPERUSER;
 ### Run the Site
 
 * Run `python3 test2.py` from the command line
-* Copy the link that appears and paste it into a browser
+* Copy the http link that appears and paste it into a browser
 
 Congratulations! You are now ready to browse the website.
 
@@ -61,11 +61,16 @@ Congratulations! You are now ready to browse the website.
 
 ### Create a New User
 
-* Create a new user on the website
+* Create a new user on the website by clicking on create an account
+* Here you can create an account by typing a username, email and password.
 
 ### Home Page
 
-* Search for movies, users, and producers using regular expressions
+* Search for movies, users, and producers. This is done using SQLAlchemy's ilike. and the SQL equievelant of this is:
+```sql:
+SELECT * FROM users
+WHERE username ILIKE '%query%' OR email ILIKE '%query%';
+```
 * View favorite movies and producers on the dashboard
 
 ### Favorite Producers
@@ -87,68 +92,6 @@ You can also add favorite producers to the dummy user.
 
 
 
-
-
-
-
-
-
-
------- SETTING UP THE DB ------------
-
-First get postgresSQL and pgadmin 4
-
-Then create new database in pgadmin called DIS_project
-
-Then make sure to create a Login/Group Roles, give it the username: rasmuslogin, and the password: password
-
-Make sure this login has the access to the database by giving this query: 
-
->>ALTER ROLE rasmuslogin LOGIN;
-
->>ALTER ROLE rasmuslogin CREATEDB;
-
->>ALTER ROLE rasmuslogin SUPERUSER;
-
-In the database create the new schema with present under SQL create_table.txt. 
-
-Insert data from the given CSV files: 
-- favor.csv
-- film.csv
-- prefer.csv
-- producer.csv
-- produces.csv 
-- users.csv 
-
-The code for uploading the data can be found under SQL insert_data.txt - you just have to change the path to the csv files. 
-
------- SETTING UP THE SITE ------------
-
-First download the packages present in requirements.txt 
->> pip install -r requirements.txt
-
-Then run from command line:
->> python3 test2.py 
-
-Copy the link that pops up into a browser. 
-
-Congratulations! You are ready to browse the website. 
-
------- BROWSING THE SITE ------------
-
-Now you can create a new user. 
-
-In Home you can search for movies, users and producers (here we have implemented pur regex expressions). 
-
-In Dashboard you can see the movies liked by the user and the favorite producers with the given rating. 
-
-In Home, under search producers, you can select one and give a rating and by pressing "favorite and rate" you will add this producer with the given rating to the producers that are favored by the user. 
-
------- DUMMY USER ------------
-
-Create a dummy user: on the webpage create a user called sara with password 123 and any mail you like. Then run the code under SQL example.txt and browse the favourite movies and see that the right 3 movies appear. 
-
-Now you can also add favourite producers. 
 
 
 
