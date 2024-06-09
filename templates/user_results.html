@@ -3,7 +3,9 @@
   <ul>
     {% for user in users %}
     <li>{{ user.username }} ({{ user.email }})
+      {% if session.username and user.username != session.username %}
       <a href="{{ url_for('view_dashboard', username=user.username) }}">View Dashboard</a>
+      {% endif %}
     </li>
     {% endfor %}
   </ul>

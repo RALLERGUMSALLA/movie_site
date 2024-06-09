@@ -91,16 +91,6 @@
       {% endfor %}
     </ul>
 
-    {% if session.username %}
-    <h2>Private Features:</h2>
-    <ul>
-      {% for item in private_data %}
-      <li>{{ item.title }}: {{ item.content }}</li>
-      {% endfor %}
-    </ul>
-    <p>Logged in as: {{ session.username }}</p>
-    {% endif %}
-
     <h2>Search Movies:</h2>
     <form id="search-movies-form">
         <input type="text" id="search-movies-input" name="query" placeholder="Enter movie title ">
@@ -128,8 +118,7 @@
         <input type="text" id="search-producers-input" name="query" placeholder="Enter name or nationality">
         <button type="submit">Search</button>
     </form>
-    <div id="producer-results"></div>    
-
+    <div id="producer-results"></div>
   </div>
 </body>
 </html>

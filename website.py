@@ -77,14 +77,14 @@ with app.app_context():
 
 # Dummy data for some functionality available to all users
 public_data = [
-    {'title': 'Public Feature 1', 'content': 'This is public feature 1 content.'},
-    {'title': 'Public Feature 2', 'content': 'This is public feature 2 content.'},
+    {'title': 'About the site', 'content': 'On this site you can search through our movie database, and rate movies and producers. You are also able ot look at other users ratings'},
+    {'title': 'Account', 'content': 'If you create an account and log in, you will gain the ability to rate movies and producers, and watch other users ratings'},
 ]
 
 # Dummy data for some functionality available only to logged-in users
 private_data = [
-    {'title': 'Private Feature 1', 'content': 'This is private feature 1 content.'},
-    {'title': 'Private Feature 2', 'content': 'This is private feature 2 content.'},
+    {'title': 'Movies', 'content': 'The movie ratings follow IMBD\'s rating system of 1-10'},
+    {'title': 'Producers', 'content': 'The producer ratings go from 1-5'},
 ]
 
 @app.route('/')
