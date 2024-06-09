@@ -14,6 +14,9 @@ sql
 templates
 -- Contains the HTML for the different links on the site
 
+ER.png
+-- Contains the E/R model og the database
+
 README.md
 -- Contains what you are reading now
 
