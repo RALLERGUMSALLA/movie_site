@@ -67,6 +67,11 @@ Congratulations! You are now ready to browse the website.
 
 ## Browsing the Site
 
+### Browsing without logging in
+
+* When not logged in to a user, your access to the sites features is limited. 
+* You only get access to the search features of the website
+
 ### Create a New User
 
 * Create a new user on the website by clicking on create an account
@@ -79,12 +84,22 @@ Congratulations! You are now ready to browse the website.
 SELECT * FROM users
 WHERE username ILIKE '%query%' OR email ILIKE '%query%';
 ```
-* View favorite movies and producers on the dashboard
+* Able to rate producers and movies, and check other users rating
+* View your own favorite movies and producers on the dashboard and your ratings
 
 ### Favorite Producers
 
 * Select a producer and give a rating
 * Press "Favorite and Rate" to add the producer to the user's favorites
+
+### Favorite movies
+
+* Select a movie and give a rating
+* Press "Favorite", after giving a rating, to add the movie to the user's favorites
+
+### Viewing other users rating
+
+* Select a user and press "View Dashboard"
 
 ## Dummy User
 
@@ -93,14 +108,12 @@ WHERE username ILIKE '%query%' OR email ILIKE '%query%';
 * Browse the favorite movies and producers to see the expected results
 * With a created user and logged in, you can then add and rate your favourite producers
 
-You can also add favorite producers to the dummy user.
+* Or create your own user and play around with the different features
 
 ## Future Improvements
 
-* Get the same functionality with movies as there is for the producer favor system
-* Be able to watch other users preferences
 * Make the site look better
-* Be able to remove a producer from your favorites (and movies, when implemented)
+* Be able to remove a producer/movies from your favorites 
 * Notification, if new producer/movie is added to the database that you favor.
 
 

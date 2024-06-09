@@ -16,12 +16,6 @@
 </head>
 <body>
   {% include 'navbar.html' %}
-  <h2>{{ username }}'s ratings of movies and producers:</h2>
-  <ul>
-    {% for item in public_data %}
-    <li>{{ item.title }}: {{ item.content }}</li>
-    {% endfor %}
-  </ul>
   <div class="content">
     {% if is_owner %}
       <h1>Welcome to Your Dashboard, {{ username }}!</h1>
@@ -29,6 +23,13 @@
       <h1>Welcome to {{ username }}'s Dashboard!</h1>
     {% endif %}
   
+    <h2>{{ username }}'s ratings of movies and producers:</h2>
+    <ul>
+      {% for item in private_data %}
+      <li>{{ item.title }}: {{ item.content }}</li>
+      {% endfor %}
+    </ul>
+
     <h2>Favorited Movies:</h2>
     <ul>
       {% for prefer in user.preferences %}
