@@ -98,7 +98,7 @@ WHERE username ILIKE '%query%' OR email ILIKE '%query%';
 * Select a movie and give a rating
 * Press "Favorite", after giving a rating, to add the movie to the user's favorites
 
-### Viewing other users rating
+### Viewing other user's rating
 
 * Select a user and press "View Dashboard" (only some of the created dummy users have favorites, "David" is one that has)
 
@@ -114,7 +114,7 @@ WHERE username ILIKE '%query%' OR email ILIKE '%query%';
 ## Future Improvements
 
 * Make the site look better
-* Be able to remove a producer/movies from your favorites 
+* Be able to remove/update a producer/movie from your favorites 
 * Notification, if new producer/movie is added to the database that you favor.
 
 
