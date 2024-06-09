@@ -100,6 +100,15 @@ def dashboard():
         return render_template('dashboard.html', private_data=private_data, username=session['username'], user=user, liked_movies=liked_movies, user_favors=user_favors)
     return redirect(url_for('login'))
 
+@app.route('/view_dashboard/<username>')
+def view_dashboard(username):
+    user = User.query.filter_by(username=username).first()
+    if user:
+        is_owner = session.get('username') == username
+        liked_movies = [prefer.film for prefer in user.preferences]
+        user_favors = user.favors
+        return render_template('dashboard.html', username=user.username, user=user, liked_movies=liked_movies, user_favors=user_favors, is_owner=is_owner)
+    return redirect(url_for('index'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

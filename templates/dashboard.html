@@ -17,27 +17,24 @@
 <body>
   {% include 'navbar.html' %}
   <div class="content">
-    <h1>Welcome to Your Dashboard, {{ username }}!</h1>
-
-    <h2>Private Features:</h2>
-    <ul>
-      {% for item in private_data %}
-      <li>{{ item.title }}: {{ item.content }}</li>
-      {% endfor %}
-    </ul>
-
+    {% if is_owner %}
+      <h1>Welcome to Your Dashboard, {{ username }}!</h1>
+    {% else %}
+      <h1>Welcome to {{ username }}'s Dashboard!</h1>
+    {% endif %}
+  
     <h2>Favorited Movies:</h2>
     <ul>
-        {% for prefer in user.preferences %}
-            <li>{{ prefer.film.title }} (Rating: {{ prefer.rating }})</li>
-        {% endfor %}
+      {% for prefer in user.preferences %}
+        <li>{{ prefer.film.title }} (Rating: {{ prefer.rating }})</li>
+      {% endfor %}
     </ul>
     
-    <h2>Your Favorite Producers:</h2>
+    <h2>Favorite Producers:</h2>
     <ul>
-        {% for favor in user_favors %}
+      {% for favor in user_favors %}
         <li>{{ favor.producer.first_name }} {{ favor.producer.sur_name }} - Rating: {{ favor.rating }}</li>
-        {% endfor %}
+      {% endfor %}
     </ul>
   </div>
 </body>
