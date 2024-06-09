@@ -99,7 +99,7 @@ WHERE username ILIKE '%query%' OR email ILIKE '%query%';
 
 ### Viewing other users rating
 
-* Select a user and press "View Dashboard"
+* Select a user and press "View Dashboard" (only some of the created dummy users have favorites, 'David' is one that has)
 
 ## Dummy User
 
