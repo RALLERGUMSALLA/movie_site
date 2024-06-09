@@ -84,6 +84,7 @@ Congratulations! You are now ready to browse the website.
 SELECT * FROM users
 WHERE username ILIKE '%query%' OR email ILIKE '%query%';
 ```
+
 * Able to rate producers and movies, and check other users rating
 * View your own favorite movies and producers on the dashboard and your ratings
 
@@ -99,7 +100,7 @@ WHERE username ILIKE '%query%' OR email ILIKE '%query%';
 
 ### Viewing other users rating
 
-* Select a user and press "View Dashboard" (only some of the created dummy users have favorites, 'David' is one that has)
+* Select a user and press "View Dashboard" (only some of the created dummy users have favorites, "David" is one that has)
 
 ## Dummy User
 
