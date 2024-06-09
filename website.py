@@ -6,7 +6,6 @@ import os
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# Load config from Config class
 class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://rasmuslogin:password@localhost/DIS_project')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -32,8 +31,8 @@ class Prefer(db.Model):
     userid = db.Column(db.Integer, db.ForeignKey('users.userid'), nullable=False)
     filmid = db.Column(db.Integer, db.ForeignKey('film.filmid'), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
-    user = db.relationship("User", back_populates="preferences")
-    film = db.relationship("Film", back_populates="preferred_by")
+    user = db.relationship("User", back_populates="preferences") # user prefers film
+    film = db.relationship("Film", back_populates="preferred_by") # film is preffered by user
 
 class Film(db.Model):
     __tablename__ = 'film'
@@ -43,8 +42,8 @@ class Film(db.Model):
     genre = db.Column(db.String(255), nullable=False)
     runtime = db.Column(db.Integer, nullable=False)
     imdb_score = db.Column(db.Float, nullable=False)
-    preferred_by = db.relationship("Prefer", back_populates="film")
-    produced_by = db.relationship('Produces', back_populates='film')
+    preferred_by = db.relationship("Prefer", back_populates="film") # user prefers films
+    produced_by = db.relationship('Produces', back_populates='film') # Producer produces films
 
 class Producer(db.Model):
     __tablename__ = 'producer'
@@ -98,7 +97,7 @@ def dashboard():
         user = User.query.filter_by(username=session['username']).first()
         liked_movies = [prefer.film for prefer in user.preferences]
         user_favors = user.favors
-        return render_template('dashboard.html', private_data=private_data, username=session['username'], liked_movies=liked_movies, user_favors=user_favors)
+        return render_template('dashboard.html', private_data=private_data, username=session['username'], user=user, liked_movies=liked_movies, user_favors=user_favors)
     return redirect(url_for('login'))
 
 
@@ -222,35 +221,40 @@ def favorite_producer():
     flash('Invalid request.')
     return redirect(url_for('login'))
 
-@app.route('/add_movie', methods=['POST'])
-def add_movie():
+@app.route('/favorite_movie', methods=['POST'])
+def favorite_movie():
     if 'username' in session:
-        username = session['username']
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=session['username']).first()
+        film_id = request.form.get('film_id')
+        rating = int(request.form.get('rating')) if request.form.get('rating') else None
+        
         if user:
-            # Retrieve form data
-            title = request.form['title']
-            genre = request.form['genre']
-            runtime = int(request.form['runtime'])
-            imdb_score = float(request.form['imdb_score'])
-
-            # Create a new movie
-            new_movie = Film(title=title, genre=genre, runtime=runtime, imdb_score=imdb_score)
-
-            # Add the new movie to the database
-            db.session.add(new_movie)
-            db.session.commit()
-
-            # Create a new preference entry for the user
-            preference = Prefer(user=user, film=new_movie, rating=0)
-
-            # Add the preference to the database
-            db.session.add(preference)
-            db.session.commit()
-
-            # Redirect back to the dashboard
-            return redirect(url_for('dashboard'))
-    # If user is not logged in or encountered an error, redirect to login page
+            # Check if the favorite already exists
+            existing_favorite = Prefer.query.filter_by(userid=user.userid, filmid=film_id).first()
+            if not existing_favorite:
+                if film_id and rating:
+                    film_title = request.form.get('film_title')
+                    # Add the film to the user's preferences with the specified rating
+                    new_preference = Prefer(userid=user.userid, filmid=film_id, rating=rating)
+                    db.session.add(new_preference)
+                    db.session.commit()
+                    # Redirect to the dashboard with a success message
+                    flash(f'{film_title} favorited and rated successfully!')
+                    return redirect(url_for('dashboard'))
+                else:
+                    # Redirect to the dashboard with an error message
+                    flash('Please provide both film ID and rating.')
+                    return redirect(url_for('dashboard'))
+            else:
+                # Redirect to the dashboard with an error message
+                flash('Film already favorited!')
+                return redirect(url_for('dashboard'))
+        else:
+            # Redirect to the login page with an error message
+            flash('You need to be logged in to favorite films.')
+            return redirect(url_for('login'))
+    # Redirect to the login page with an error message
+    flash('Invalid request.')
     return redirect(url_for('login'))
 
 if __name__ == '__main__':

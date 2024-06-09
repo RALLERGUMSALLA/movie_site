@@ -26,11 +26,11 @@
       {% endfor %}
     </ul>
 
-    <h2>Liked Movies:</h2>
+    <h2>Favorited Movies:</h2>
     <ul>
-      {% for movie in liked_movies %}
-      <li>{{ movie.title }} ({{ movie.genre }})</li>
-      {% endfor %}
+        {% for prefer in user.preferences %}
+            <li>{{ prefer.film.title }} (Rating: {{ prefer.rating }})</li>
+        {% endfor %}
     </ul>
     
     <h2>Your Favorite Producers:</h2>
